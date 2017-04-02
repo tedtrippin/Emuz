@@ -9,7 +9,7 @@ import com.trippin.emuz.model.EmuTypeEnum;
 
 public class BridgeBuilderEmuType implements EmuType {
 
-    private static final int BUILD_SPEED = 50; // Clicks per brick laid
+    private static final int BUILD_SPEED = 40; // Clicks per brick laid
     private static final int NUMBER_OF_BRICKS = 10;
     private static final int BRICK_WIDTH = 10;
     private static final int MOVE_FORWARD = BRICK_WIDTH - 1; // How far to move forward after laying
@@ -41,6 +41,9 @@ public class BridgeBuilderEmuType implements EmuType {
         }
 
         emu.setPosY(emu.getPosY() - 1); // Move up height of brick -> 1
+
+        if (engine.isSolid(emu, BRICK_WIDTH))
+            emu.turnAround();
 
         bricksLaid++;
         if (bricksLaid == NUMBER_OF_BRICKS)

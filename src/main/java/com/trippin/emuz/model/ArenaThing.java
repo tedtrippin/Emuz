@@ -54,6 +54,11 @@ public interface ArenaThing {
     public void setVelocity(int velocity);
 
     /**
+     * Inverts Velocity.
+     */
+    public void turnAround();
+
+    /**
      * Gets the speed of the thing. Same value
      * as velocity but always positive.
      *

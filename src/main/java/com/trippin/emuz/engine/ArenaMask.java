@@ -10,15 +10,16 @@ public class ArenaMask {
     private BufferedImage mapMask;
     private BufferedImage emuMask;
 
-    public static ArenaMask createTestArena() {
+    public static ArenaMask createFlatArena(int width, int height, int floorLevel) {
 
         BufferedImage mask = new BufferedImage(2000, 1000, BufferedImage.TYPE_BYTE_BINARY);
         Graphics g = mask.getGraphics();
 
         // Draw sides
-        g.fillRect(0, 0, 20, 1000);
-        g.fillRect(1980, 0, 2000, 1000);
-        g.fillRect(20, 100, 1980, 1000);
+        g.fillRect(0, 0, 20, height);
+        g.fillRect(width-20, 0, 2000, height);
+
+        g.fillRect(20, floorLevel, width-20, height);
 
         return new ArenaMask(mask);
     }

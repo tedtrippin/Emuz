@@ -117,7 +117,6 @@ public class Engine {
         int[] pixels = mask.getPixels(x, y, width, upHeight + downHeight);
 
         // First check for falling
-        // Move idx to the pixel below thing
         int idx = thing.getVelocity() > 0 ? width -1 : 0;
         idx += upHeight * width;
 
@@ -141,6 +140,7 @@ public class Engine {
             thing.setFalling(false);
         }
 
+        // Now check to see if the next step is up/down/level
         idx = 0;
         int heightAdjust = -1;
         for (int i = 0; i < upHeight + downHeight; i++) {
@@ -152,20 +152,54 @@ public class Engine {
                 idx++;
             }
 
-            if (!rowClear)
+            if (rowClear)
+                heightAdjust = i;
+            else if (heightAdjust > -1)
                 break;
-
-            heightAdjust = i;
         }
 
         if (heightAdjust < 0) {
-            thing.setVelocity(thing.getVelocity() * -1); // Turn around
+            // If height adjust not set then we can't go forward
+            thing.turnAround();
         } else {
             thing.setPosX(thing.getPosX() + thing.getVelocity());
             thing.setPosY(thing.getPosY() - upHeight + heightAdjust + 1);
         }
 
         return thing.getPosX() < 0 || thing.getPosX() >= arenaWidth;
+    }
+
+    /**
+     * checks if the pixels in front of emu are solid.
+     *
+     * @param emu
+     * @param velocity
+     * @return
+     */
+    public boolean isSolid(ArenaThing thing, int velocity) {
+
+        int x = thing.getPosX() + velocity;
+        int width;
+        if (x < 0) {
+            width = thing.getPosX();
+            x = 0;
+        } else if (x > arenaWidth) {
+            width = arenaWidth - thing.getPosX();
+            x = arenaWidth;
+        } else {
+            width = velocity;
+        }
+
+        if (velocity > 0)
+            x -= width;
+
+        int[] pixels = mask.getPixels(x, thing.getPosY(), width, 1);
+        for (int i : pixels) {
+            if (i != -1)
+                return false;
+        }
+
+        return true;
     }
 
     public void addEmu(Emu emu) {

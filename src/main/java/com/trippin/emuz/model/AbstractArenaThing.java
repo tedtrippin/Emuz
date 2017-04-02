@@ -61,6 +61,11 @@ public abstract class AbstractArenaThing implements ArenaThing {
     }
 
     @Override
+    public void turnAround() {
+        velocity = velocity * -1;
+    }
+
+    @Override
     public int getWidth() {
         return width;
     }

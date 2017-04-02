@@ -20,7 +20,15 @@ public class StopperEmuType implements EmuType {
     @Override
     public void paint(Graphics g, Engine e) {
 
+        // Paint the stopper
         g.fillRect(
+            emu.getPosX() - emu.getHalfWidth(),
+            emu.getPosY() - emu.getHeight(),
+            emu.getWidth(),
+            emu.getHeight());
+
+        // Paint to the map mask so can detect collision
+        e.getArenaMask().getMapMask().getGraphics().fillRect(
             emu.getPosX() - emu.getHalfWidth(),
             emu.getPosY() - emu.getHeight(),
             emu.getWidth(),

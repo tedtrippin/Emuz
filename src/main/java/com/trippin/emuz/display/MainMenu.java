@@ -43,7 +43,7 @@ public class MainMenu
 
         // Create random mask
         ArenaMask arenaMask = ArenaMask.createRandomArena(1000, 1000);
-//        ArenaMask arenaMask = ArenaMask.createTestArena();
+//        ArenaMask arenaMask = ArenaMask.createFlatArena(500, 500, 100);
 
         // Create a new engine
         EmuEntrance emuEntrance = new EmuEntrance(70, 30, 40, 10);
