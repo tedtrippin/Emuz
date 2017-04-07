@@ -2,29 +2,23 @@ package com.trippin.emuz.engine;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URL;
+
+import javax.imageio.ImageIO;
 
 public class ArenaMask {
 
     private final int arenaWidth;
     private final int arenaHeight;
-    private BufferedImage mapMask;
-    private BufferedImage emuMask;
+    private BufferedImage map; // Mask for the map pixels
+    private BufferedImage emuMask; // Mask for emuz, for mouse-over-emu detection
 
-    public static ArenaMask createFlatArena(int width, int height, int floorLevel) {
+    public static ArenaMask createRandomArena(int width, int height)
+        throws IOException {
 
-        BufferedImage mask = new BufferedImage(2000, 1000, BufferedImage.TYPE_BYTE_BINARY);
-        Graphics g = mask.getGraphics();
-
-        // Draw sides
-        g.fillRect(0, 0, 20, height);
-        g.fillRect(width-20, 0, 2000, height);
-
-        g.fillRect(20, floorLevel, width-20, height);
-
-        return new ArenaMask(mask);
-    }
-
-    public static ArenaMask createRandomArena(int width, int height) {
+        URL textureUrl = ArenaMask.class.getClassLoader().getResource("texture1.jpg");
+        BufferedImage texture = ImageIO.read(textureUrl);
 
         BufferedImage mask = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_BINARY);
         Graphics g = mask.getGraphics();
@@ -65,15 +59,16 @@ public class ArenaMask {
             y = nextY;
         }
 
-        return new ArenaMask(mask);
+        return new ArenaMask(mask, texture);
     }
 
-    public ArenaMask(BufferedImage mask) {
+    public ArenaMask(BufferedImage mask, BufferedImage texture) {
 
         arenaWidth = mask.getWidth();
         arenaHeight = mask.getHeight();
-        mapMask = mask;
         emuMask = new BufferedImage(arenaWidth, arenaHeight, BufferedImage.TYPE_BYTE_BINARY);
+
+        applyTexture(mask, texture);
     }
 
     public void prePaint() {
@@ -92,7 +87,7 @@ public class ArenaMask {
     public int[] getPixels(int x, int y, int width, int height) {
 
         int[] pixels = new int[width * height];
-        return mapMask.getRGB(x, y, width, height, pixels, 0, width);
+        return map.getRGB(x, y, width, height, pixels, 0, width);
     }
 
     /**
@@ -110,8 +105,8 @@ public class ArenaMask {
         return emuMask.getRGB(x, y) == -1;
     }
 
-    public BufferedImage getMapMask() {
-        return mapMask;
+    public BufferedImage getMap() {
+        return map;
     }
 
     public BufferedImage getEmuMask() {
@@ -124,5 +119,27 @@ public class ArenaMask {
 
     public int getArenaHeight() {
         return arenaHeight;
+    }
+
+    private void applyTexture(BufferedImage mask, BufferedImage texture) {
+
+        // Fill the map with the texture
+        map = new BufferedImage(arenaWidth, arenaHeight, texture.getType());
+        for (int i = 0; i < arenaWidth; ) {
+            for (int j = 0; j < arenaHeight; ) {
+                map.getGraphics().drawImage(texture, i, j, null);
+                j += texture.getHeight();
+            }
+            i += texture.getWidth();
+        }
+
+        // Apply map
+        int[] mapPixels = map.getRGB(0, 0, arenaWidth, arenaHeight, null, 0, arenaWidth);
+        int[] maskPixels = mask.getRGB(0, 0, arenaWidth, arenaHeight, null, 0, arenaWidth);
+        for (int i = 0; i < mapPixels.length; i++) {
+            if (maskPixels[i] != -1)
+                mapPixels[i] = 0;
+        }
+        map.setRGB(0, 0, arenaWidth, arenaHeight, mapPixels, 0, arenaWidth);
     }
 }

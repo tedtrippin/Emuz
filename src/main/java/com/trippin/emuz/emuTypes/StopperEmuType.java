@@ -28,7 +28,7 @@ public class StopperEmuType implements EmuType {
             emu.getHeight());
 
         // Paint to the map mask so can detect collision
-        e.getArenaMask().getMapMask().getGraphics().fillRect(
+        e.getArenaMask().getMap().getGraphics().fillRect(
             emu.getPosX() - emu.getHalfWidth(),
             emu.getPosY() - emu.getHeight(),
             emu.getWidth(),

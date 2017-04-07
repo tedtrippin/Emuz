@@ -11,6 +11,7 @@ import com.trippin.emuz.model.EmuEntrance;
 public class Engine {
 
     private final int GRAVITY = 5;
+    private final int EMPTY_PIXEL = -16777216;
     private final int GRAVITY_PLUS_1 = GRAVITY + 1; // For convenience
     private final int MAX_STEP_UP = 3; // Max size of step can walk up
     private final int MAX_STEP_UP_MINUS_1 = MAX_STEP_UP - 1; // For convenience
@@ -47,6 +48,14 @@ public class Engine {
 
     public Dimension getSize() {
         return new Dimension(arenaWidth, arenaHeight);
+    }
+
+    public int getArenaWidth() {
+        return arenaWidth;
+    }
+
+    public int getArenaHeight() {
+        return arenaHeight;
     }
 
     public List<ArenaThing> getThings() {
@@ -122,7 +131,7 @@ public class Engine {
 
         boolean falling = true;
         for (int i = downHeight; i > 0; i--) {
-            if (pixels[idx] != -1) {
+            if (pixels[idx] == EMPTY_PIXEL) {
                 idx += width;
                 continue;
             }
@@ -146,7 +155,7 @@ public class Engine {
         for (int i = 0; i < upHeight + downHeight; i++) {
             boolean rowClear = true;
             for (int j = width ; j > 0; j--) {
-                if (pixels[idx] == -1)
+                if (pixels[idx] != EMPTY_PIXEL)
                     rowClear = false;
 
                 idx++;

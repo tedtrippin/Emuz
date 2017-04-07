@@ -3,6 +3,7 @@ package com.trippin.emuz.display;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,14 +43,20 @@ public class MainMenu
     private void start() {
 
         // Create random mask
-        ArenaMask arenaMask = ArenaMask.createRandomArena(1000, 1000);
+        ArenaMask arenaMask = null;
+        try {
+            arenaMask = ArenaMask.createRandomArena(1000, 1000);
 //        ArenaMask arenaMask = ArenaMask.createFlatArena(500, 500, 100);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            System.exit(-1);
+        }
 
         // Create a new engine
         EmuEntrance emuEntrance = new EmuEntrance(70, 30, 40, 10);
         List<EmuEntrance> emuEntrances = new ArrayList<>();
         emuEntrances.add(emuEntrance);
-        Engine engine = new Engine(arenaMask, 20, emuEntrances);
+        Engine engine = new Engine(arenaMask, 40, emuEntrances);
 
         // Create the game panel
         GamePanel gamePanel = new GamePanel(parent, engine);

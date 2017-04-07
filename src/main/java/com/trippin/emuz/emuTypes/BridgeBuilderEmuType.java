@@ -31,7 +31,7 @@ public class BridgeBuilderEmuType implements EmuType {
 
         clickCount = 0;
 
-        BufferedImage map = engine.getArenaMask().getMapMask();
+        BufferedImage map = engine.getArenaMask().getMap();
         if (emu.getVelocity() > 0) {
             map.getGraphics().drawLine(emu.getPosX(), emu.getPosY(), emu.getPosX() + BRICK_WIDTH, emu.getPosY());
             emu.setPosX(emu.getPosX() + MOVE_FORWARD);

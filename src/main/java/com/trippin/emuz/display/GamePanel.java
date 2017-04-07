@@ -34,6 +34,14 @@ public class GamePanel extends JPanel {
         arenaView.setViewportView(arena);
         add(arenaView, BorderLayout.CENTER);
 
+        // TODO - Should wait for panel to finish drawing. For now we'll just wait.
+        synchronized (this) {
+            try {
+                wait(100);
+            } catch (InterruptedException ex) {
+            }
+        }
+
         engineThread = new Thread(new EngineTask());
         engineThread.start();
     }

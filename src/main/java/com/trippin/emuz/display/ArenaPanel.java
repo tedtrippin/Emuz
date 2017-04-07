@@ -43,7 +43,6 @@ public class ArenaPanel
         addMouseMotionListener(dragListener);
     }
 
-    int i = 0;
     @Override
     public void paint(Graphics g) {
 
@@ -51,8 +50,7 @@ public class ArenaPanel
 
         engine.getArenaMask().prePaint();
 
-        // TODO - for now we're just using the mask as the map
-        g.drawImage(engine.getArenaMask().getMapMask(), 0, 0, null);
+        g.drawImage(engine.getArenaMask().getMap(), 0, 0, null);
 
         g.setColor(Color.GREEN);
 
@@ -82,7 +80,7 @@ public class ArenaPanel
 
             Emu emu = engine.getEmu(e.getX(), e.getY());
             if (emu == null) {
-System.out.println("NO EMU");
+
                 return;
             }
 
